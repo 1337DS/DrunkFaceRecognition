@@ -115,11 +115,13 @@ def get_files_to_crop(mypath):
     onlyfiles = [f for f in listdir(mypath) if isfile(join(mypath, f))]
     return onlyfiles
 
-def convert_all():
+def convert_all_pic_to_four_pics():
     file_list = get_files_to_crop('Data/raw/webp')
     print(file_list)
     for i in file_list:
         path = f'Data/raw/webp/{i}'
         make_four_out_of_one(convert_webp_to_jpg(path))
 
-convert_all()
+
+
+#convert_all_pic_to_four_pics()
