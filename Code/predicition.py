@@ -31,7 +31,7 @@ def make_prediction(path_to_file):
         prediction = int(prediction[0])
         print(prediction)
         file = open("result.txt", "w")
-        file.write(prediction)
+        file.write(f'{prediction}')
         file.close()
         
         
