@@ -30,6 +30,10 @@ def make_prediction(path_to_file):
         prediction = prediction_model.predict(data)
         prediction = int(prediction[0])
         print(prediction)
+        file = open("result.txt", "w")
+        file.write(prediction)
+        file.close()
+        
         
     
     #print(img)
