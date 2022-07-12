@@ -19,7 +19,7 @@ def get_image(image_path):
 def change_brightness(img):
     print(img)
     
-get_image('/Users/yannikhubrich/Documents/Studium/6Semester/DrunkFaceRecognition/Data/raw/alligned/d4a7a2_1b7fef8b5225436f923db06a76c52e4a.jpg_drei_glaeser.jpg')
+#get_image('/Users/yannikhubrich/Documents/Studium/6Semester/DrunkFaceRecognition/Data/raw/alligned/d4a7a2_1b7fef8b5225436f923db06a76c52e4a.jpg_drei_glaeser.jpg')
 
 # Change brightness of images (50-150% of original value).
 #iaa.Multiply((0.5, 1.5), per_channel=0.5)

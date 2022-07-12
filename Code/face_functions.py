@@ -3,12 +3,11 @@ face_cascade=cv2.CascadeClassifier("haarcascade_frontalface_default.xml")
 eye_cascade=cv2.CascadeClassifier("haarcascade_eye.xml")
 import mediapipe as mp
 import numpy as np
-import imutils
 from imutils.face_utils import FaceAligner
 from imutils.face_utils import rect_to_bb
 from PIL import Image
-
-import re
+import mediapipe as mp
+import pandas as pd
 import dlib
 import cv2
 import os
@@ -159,8 +158,83 @@ def allign_all_faces_in_directory(abs_path_input_dir, abs_path_ouput_dir):
             path_to_safe = abs_path_ouput_dir + '/' + file_name
             img = allign_face(input_file)
             cv2.imwrite(path_to_safe, img)
-    
-abs_path_input_dir = '/Users/yannikhubrich/Documents/Studium/6Semester/DrunkFaceRecognition/Data/raw/cropped_to_four'
-abs_path_ouput_dir = '/Users/yannikhubrich/Documents/Studium/6Semester/DrunkFaceRecognition/Data/raw/alligned'
 
-allign_all_faces_in_directory(abs_path_input_dir, abs_path_ouput_dir)
+
+def get_facial_landmarks(cv_2_img):
+    # INITIALIZING OBJECTS
+    mp_drawing = mp.solutions.drawing_utils
+    mp_drawing_styles = mp.solutions.drawing_styles
+    mp_face_mesh = mp.solutions.face_mesh
+    
+    cap = cv_2_img
+    with mp_face_mesh.FaceMesh(min_detection_confidence=0.5, min_tracking_confidence=0.5) as face_mesh:
+        image = cap
+
+        # Flip the image horizontally and convert the color space from BGR to RGB
+        image = cv2.cvtColor(cv2.flip(image, 1), cv2.COLOR_BGR2RGB)
+
+        # To improve performance
+        image.flags.writeable = False
+        
+        # Detect the face landmarks
+        results = face_mesh.process(image)
+
+        # To improve performance
+        image.flags.writeable = True
+
+        # Convert back to the BGR color space
+        image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+        
+        # Draw the face mesh annotations on the image.
+        face_landmarks = results.multi_face_landmarks[0].landmark
+        #print(face_landmarks)
+        #print(type(face_landmarks))
+        data = []
+        columns = []
+        for i in range(len(face_landmarks)):
+            #print(face_landmarks[i])
+            landmark = face_landmarks[i]
+            x = landmark.x
+            column_name_x = f'facial_landmark_{i+1}_x'
+            y = landmark.y
+            column_name_y = f'facial_landmark_{i+1}_y'
+            z = landmark.z
+            column_name_z = f'facial_landmark_{i+1}_z'
+            
+            
+            columns.append(column_name_x)
+            columns.append(column_name_y)
+            columns.append(column_name_z)
+            
+            
+            
+            data.append(x)
+            data.append(y)
+            data.append(z)
+            
+            
+            # draw the landmarks on as img
+            #mp_drawing.draw_landmarks(
+            #    image=image,
+            #    landmark_list=face_landmark,
+            #    connections=mp_face_mesh.FACEMESH_TESSELATION,
+            #    landmark_drawing_spec=None,
+            #    connection_drawing_spec=mp_drawing_styles
+            #    .get_default_face_mesh_tesselation_style())
+            # Display the image
+            #cv2.imshow('MediaPipe FaceMesh', image)
+            # Terminate the process
+            #cv2.waitKey(0)
+            #cv2.destroyWindow('MediaPipe FaceMesh')
+            #cv2.waitKey(1)
+        data = [data]
+        df = pd.DataFrame(data, columns=columns, dtype=float)
+        
+        #print(data)
+        
+        return df
+
+#abs_path_input_dir = '/Users/yannikhubrich/Documents/Studium/6Semester/DrunkFaceRecognition/Data/raw/cropped_to_four'
+#abs_path_ouput_dir = '/Users/yannikhubrich/Documents/Studium/6Semester/DrunkFaceRecognition/Data/raw/alligned'
+
+##allign_all_faces_in_directory(abs_path_input_dir, abs_path_ouput_dir)
