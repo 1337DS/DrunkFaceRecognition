@@ -13,6 +13,7 @@ def get_model(path_to_model):
 
 def get_image(image_path):
     img = Image.open(image_path).convert('RGB')
+    #print(type(img))
     img_file_name = image_path
     
     return img, img_file_name
@@ -22,6 +23,7 @@ def make_prediction(path_to_file):
     if check_for_face(path_to_file) == True:
         print('yes')
         img = allign_face(path_to_file)
+        print('-----------------------', type(img), '-----------------------')
         df = get_facial_landmarks(img)
         #print(df)
         data = df.values
@@ -33,6 +35,7 @@ def make_prediction(path_to_file):
         file = open("result.txt", "w")
         file.write(f'{prediction}')
         file.close()
+        return prediction
         
         
     
@@ -41,4 +44,5 @@ def make_prediction(path_to_file):
     
     
 
-make_prediction('Data/camer_roll/259020246_603978364185239_5747415459091089397_n.jpeg')
+#make_prediction('/Users/yannikhubrich/Documents/Studium/6Semester/DrunkFaceRecognition/Data/camer_roll/71829863_394586244763145_7808846751268751762_n.jpeg')
+make_prediction('foo.jpg')
